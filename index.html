@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Ingresos Courier — 5LD</title>
+  <title>PANEL INGRESOS COURIER — 5LD</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f1117;
-      color: #e2e8f0;
+      background: #fdf8ee;
+      color: #2d2a1e;
       min-height: 100vh;
       padding: 20px 24px;
     }
@@ -19,11 +19,23 @@
       justify-content: space-between;
       margin-bottom: 20px;
     }
-    header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px; }
-    .dot-live { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+    header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a0e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot-live {
+      width: 7px; height: 7px;
+      background: #e6a817;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-    #estado-refresh { font-size: 11px; color: #475569; }
-    #contador { font-size: 11px; color: #22c55e; margin-left: 6px; }
+    #estado-refresh { font-size: 11px; color: #8a7a50; }
+    #contador { font-size: 11px; color: #c4920a; margin-left: 6px; }
 
     .resumen {
       display: grid;
@@ -32,34 +44,35 @@
       margin-bottom: 18px;
     }
     .stat {
-      background: #161b27;
-      border: 0.5px solid #1e2a3f;
+      background: #fff8e1;
+      border: 0.5px solid #e6c96a;
       border-radius: 8px;
       padding: 12px 14px;
     }
-    .stat-label { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-    .stat-valor { font-size: 24px; font-weight: 600; }
-    .stat-valor.azul { color: #60a5fa; }
-    .stat-valor.lila { color: #a78bfa; }
-    .stat-valor.amarillo { color: #f59e0b; }
+    .stat-label { font-size: 10px; color: #8a7a50; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .stat-valor { font-size: 24px; font-weight: 700; }
+    .stat-valor.dorado   { color: #c4920a; }
+    .stat-valor.naranja  { color: #d97706; }
+    .stat-valor.verde    { color: #2d7a3a; }
+    .stat-valor.oscuro   { color: #1a1a0e; }
 
     .filtros { display: flex; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
     .filtro {
-      font-size: 11px; padding: 4px 12px;
-      border-radius: 20px; border: 0.5px solid #2d3348;
-      color: #64748b; background: transparent; cursor: pointer; transition: all .15s;
+      font-size: 11px; padding: 4px 14px;
+      border-radius: 20px; border: 0.5px solid #e6c96a;
+      color: #8a7a50; background: #fff8e1; cursor: pointer; transition: all .15s;
     }
-    .filtro.activo { background: #1e3a5f; border-color: #185fa5; color: #93c5fd; }
+    .filtro.activo { background: #f0c020; border-color: #c4920a; color: #3d2e00; font-weight: 600; }
 
     .seccion-titulo {
       font-size: 11px;
-      color: #334155;
+      color: #8a7a50;
       text-transform: uppercase;
       letter-spacing: .6px;
       margin-bottom: 10px;
       margin-top: 18px;
       padding-bottom: 6px;
-      border-bottom: 0.5px solid #1e2a3f;
+      border-bottom: 0.5px solid #e6c96a;
     }
 
     .grid {
@@ -69,74 +82,91 @@
     }
 
     .card {
-      background: #161b27;
-      border: 0.5px solid #1e2a3f;
+      background: #fffdf5;
+      border: 0.5px solid #e6c96a;
       border-radius: 10px;
       padding: 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: border-color .2s;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .card:hover { border-color: #334155; }
-    .card.pendiente { border-left: 2px solid #f59e0b; border-radius: 0 10px 10px 0; }
-    .card.en-camino { border-left: 2px solid #60a5fa; border-radius: 0 10px 10px 0; }
-    .card.listo     { border-left: 2px solid #22c55e; border-radius: 0 10px 10px 0; }
+    .card:hover { border-color: #c4920a; box-shadow: 0 2px 8px rgba(196,146,10,.1); }
+    .card.pendiente { border-left: 3px solid #d97706; border-radius: 0 10px 10px 0; }
+    .card.en-camino { border-left: 3px solid #2563eb; border-radius: 0 10px 10px 0; }
+    .card.listo     { border-left: 3px solid #2d7a3a; border-radius: 0 10px 10px 0; }
 
     .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-    .card-titulo { font-size: 13px; font-weight: 600; color: #f1f5f9; line-height: 1.3; }
-    .card-subtitulo { font-size: 10px; color: #334155; margin-top: 2px; }
+    .card-titulo { font-size: 13px; font-weight: 700; color: #1a1a0e; line-height: 1.3; }
+    .card-subtitulo { font-size: 10px; color: #8a7a50; margin-top: 2px; }
 
     .badges { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; margin-left: 8px; }
     .badge {
-      font-size: 9px; font-weight: 600; padding: 2px 7px;
+      font-size: 9px; font-weight: 700; padding: 2px 7px;
       border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
     }
-    .badge.ep   { background: #0c447c22; color: #60a5fa; border: 0.5px solid #185fa5; }
-    .badge.glep { background: #3c348922; color: #a78bfa; border: 0.5px solid #534ab7; }
-    .badge.estado-listo     { background: #14532d22; color: #4ade80; border: 0.5px solid #166534; }
-    .badge.estado-pendiente { background: #78160c22; color: #fb923c; border: 0.5px solid #9a3412; }
-    .badge.estado-camino    { background: #1e3a5f22; color: #60a5fa; border: 0.5px solid #185fa5; }
-    .badge.estado-otro      { background: #1e293b22; color: #64748b; border: 0.5px solid #334155; }
+    .badge.ep   { background: #fff3cd; color: #854d0e; border: 0.5px solid #f0c020; }
+    .badge.glep { background: #fde68a; color: #451a03; border: 0.5px solid #d97706; }
+    .badge.estado-listo     { background: #dcfce7; color: #166534; border: 0.5px solid #86efac; }
+    .badge.estado-pendiente { background: #ffedd5; color: #9a3412; border: 0.5px solid #fdba74; }
+    .badge.estado-camino    { background: #dbeafe; color: #1e40af; border: 0.5px solid #93c5fd; }
+    .badge.estado-otro      { background: #f5f0e0; color: #8a7a50; border: 0.5px solid #e6c96a; }
 
     .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .info-label { font-size: 9px; color: #334155; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
-    .info-valor { font-size: 11px; color: #94a3b8; font-weight: 500; word-break: break-all; }
+    .info-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .info-label { font-size: 9px; color: #8a7a50; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
+    .info-valor { font-size: 11px; color: #3d2e00; font-weight: 600; word-break: break-all; }
+    .info-valor.destacado { color: #c4920a; }
 
     .etapas { display: flex; gap: 4px; flex-wrap: wrap; }
     .etapa {
       font-size: 9px; padding: 2px 6px;
-      border-radius: 3px; border: 0.5px solid #1e2a3f; color: #334155;
+      border-radius: 3px; border: 0.5px solid #e6c96a; color: #8a7a50;
+      background: #fff8e1;
     }
-    .etapa.ok  { background: #14532d18; border-color: #166534; color: #4ade80; }
-    .etapa.act { background: #1e3a5f18; border-color: #185fa5; color: #60a5fa; }
+    .etapa.ok  { background: #dcfce7; border-color: #86efac; color: #166534; }
+    .etapa.act { background: #dbeafe; border-color: #93c5fd; color: #1e40af; }
 
     .btn-dhl {
       display: block; width: 100%; text-align: center;
-      padding: 7px; background: #0c447c22; color: #60a5fa;
-      border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: 500;
-      border: 0.5px solid #185fa5; transition: background .15s; margin-top: auto;
+      padding: 8px; background: #f0c020; color: #3d2e00;
+      border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: 700;
+      border: 0.5px solid #c4920a; transition: background .15s; margin-top: auto;
     }
-    .btn-dhl:hover { background: #0c447c55; }
+    .btn-dhl:hover { background: #e6b800; }
     .btn-dhl-disabled {
       display: block; width: 100%; text-align: center;
-      padding: 7px; background: transparent; color: #1e2a3f;
+      padding: 8px; background: #f5f0e0; color: #c9b97a;
       border-radius: 6px; font-size: 11px;
-      border: 0.5px solid #1e2a3f; margin-top: auto;
+      border: 0.5px solid #e6c96a; margin-top: auto;
     }
 
-    #loading { text-align: center; padding: 60px; color: #475569; font-size: 14px; }
+    #loading { text-align: center; padding: 60px; color: #8a7a50; font-size: 14px; }
     #error {
-      display: none; background: #450a0a; border: 0.5px solid #7f1d1d;
-      color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+      display: none; background: #fff0e0; border: 0.5px solid #f59e0b;
+      color: #92400e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
     }
-    .vacio { color: #334155; font-size: 13px; padding: 16px 0; }
+    .vacio { color: #8a7a50; font-size: 13px; padding: 16px 0; }
+
+    .logo-ml {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ml-badge {
+      background: #f0c020; color: #3d2e00;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px;
+      letter-spacing: .3px;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1><span class="dot-live"></span> Panel Ingresos Courier — 5LD</h1>
+  <h1>
+    <span class="dot-live"></span>
+    PANEL INGRESOS COURIER — 5LD
+    <span class="ml-badge">DHL</span>
+  </h1>
   <div>
     <span id="estado-refresh">Cargando...</span>
     <span id="contador"></span>
@@ -158,7 +188,7 @@
 <div id="contenido"></div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4DitGDj14aiRiOuwX5KnporBALUaxSqoxiqRKn4XuPtQVEPxw1nLUGdrWwM04qPU/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwf0MXUFyr12UPm8TZ2ARqAb3AIhd2TQGU1lp1gQRAg2E23tFrji_yOMBz3njRf4U/exec";
   const REFRESH_SECONDS = 30;
   let countdown = REFRESH_SECONDS;
   let todosLosDatos = [];
@@ -197,11 +227,17 @@
   }
 
   function renderResumen(data) {
+    const total     = data.length;
+    const ep        = data.filter(d => d.tipo === "EP").length;
+    const glep      = data.filter(d => d.tipo === "GLEP").length;
+    const pendiente = data.filter(d => !etapaOk(d.ingreso)).length;
+    const listos    = data.filter(d => etapaOk(d.ingreso)).length;
+
     document.getElementById("resumen").innerHTML = `
-      <div class="stat"><div class="stat-label">Total pedidos</div><div class="stat-valor azul">${data.length}</div></div>
-      <div class="stat"><div class="stat-label">EP</div><div class="stat-valor azul">${data.filter(d=>d.tipo==="EP").length}</div></div>
-      <div class="stat"><div class="stat-label">GLEP</div><div class="stat-valor lila">${data.filter(d=>d.tipo==="GLEP").length}</div></div>
-      <div class="stat"><div class="stat-label">Ingreso pendiente</div><div class="stat-valor amarillo">${data.filter(d=>!etapaOk(d.ingreso)).length}</div></div>
+      <div class="stat"><div class="stat-label">Total pedidos</div><div class="stat-valor oscuro">${total}</div></div>
+      <div class="stat"><div class="stat-label">EP</div><div class="stat-valor dorado">${ep}</div></div>
+      <div class="stat"><div class="stat-label">GLEP</div><div class="stat-valor naranja">${glep}</div></div>
+      <div class="stat"><div class="stat-label">Ingreso pendiente</div><div class="stat-valor naranja">${pendiente}</div></div>
     `;
   }
 
@@ -210,6 +246,7 @@
     const enCamino  = !ingresoOk && (etapaActiva(d.shipping) || etapaActiva(d.comInv));
     const cardClass = ingresoOk ? "listo" : enCamino ? "en-camino" : "pendiente";
     const tipoClass = d.tipo === "GLEP" ? "glep" : "ep";
+    const fechaEstim = d.fechaEstimada && d.fechaEstimada !== "-" ? d.fechaEstimada : "Sin fecha";
 
     return `
       <div class="card ${cardClass}">
@@ -223,16 +260,22 @@
             <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso === "Pendiente" ? "Pendiente" : d.ingreso}</span>
           </div>
         </div>
-        <div class="info-row">
+
+        <div class="info-row-3">
           <div>
-            <div class="info-label">Fecha inicio</div>
+            <div class="info-label">Inicio</div>
             <div class="info-valor">${d.fechaInicio}</div>
+          </div>
+          <div>
+            <div class="info-label">Est. ingreso</div>
+            <div class="info-valor destacado">${fechaEstim}</div>
           </div>
           <div>
             <div class="info-label">Tracking</div>
             <div class="info-valor">${d.tracking}</div>
           </div>
         </div>
+
         <div class="etapas">
           <span class="etapa ${etapaOk(d.simulacion)?'ok':etapaActiva(d.simulacion)?'act':''}">Simulación</span>
           <span class="etapa ${etapaOk(d.cotizar)?'ok':etapaActiva(d.cotizar)?'act':''}">Cotizar</span>
@@ -241,6 +284,7 @@
           <span class="etapa ${etapaOk(d.comInv)?'ok':etapaActiva(d.comInv)?'act':''}">Com/Inv</span>
           <span class="etapa ${ingresoOk?'ok':''}">Ingreso</span>
         </div>
+
         ${d.linkDHL
           ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
           : `<div class="btn-dhl-disabled">Sin tracking cargado</div>`
@@ -257,18 +301,17 @@
       return;
     }
 
-    // Separar y ordenar por número de pedido
     const gleps = filtrados.filter(d => d.tipo === "GLEP").sort((a,b) => numPedido(a.pedido) - numPedido(b.pedido));
     const eps   = filtrados.filter(d => d.tipo === "EP").sort((a,b) => numPedido(a.pedido) - numPedido(b.pedido));
 
     let html = "";
 
-    if (gleps.length > 0 && (filtroActual === "todos" || filtroActual === "GLEP" || filtroActual === "pendiente" || filtroActual === "listo")) {
+    if (gleps.length > 0) {
       html += `<div class="seccion-titulo">GLEP — ${gleps.length} pedidos</div>`;
       html += `<div class="grid">${gleps.map(cardHTML).join("")}</div>`;
     }
 
-    if (eps.length > 0 && (filtroActual === "todos" || filtroActual === "EP" || filtroActual === "pendiente" || filtroActual === "listo")) {
+    if (eps.length > 0) {
       html += `<div class="seccion-titulo">EP — ${eps.length} pedidos</div>`;
       html += `<div class="grid">${eps.map(cardHTML).join("")}</div>`;
     }
