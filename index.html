@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PANEL INGRESOS COURIER — 5LD</title>
+  <title>Panel Ingresos Courier — 5LD</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -51,10 +51,24 @@
     }
     .stat-label { font-size: 10px; color: #8a7a50; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
     .stat-valor { font-size: 24px; font-weight: 700; }
-    .stat-valor.dorado   { color: #c4920a; }
-    .stat-valor.naranja  { color: #d97706; }
-    .stat-valor.verde    { color: #2d7a3a; }
-    .stat-valor.oscuro   { color: #1a1a0e; }
+    .stat-valor.dorado  { color: #c4920a; }
+    .stat-valor.naranja { color: #d97706; }
+    .stat-valor.verde   { color: #2d7a3a; }
+    .stat-valor.oscuro  { color: #1a1a0e; }
+
+    .buscador-wrap { margin-bottom: 14px; }
+    .buscador-wrap input {
+      width: 100%;
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 0.5px solid #e6c96a;
+      background: #fff8e1;
+      color: #3d2e00;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .buscador-wrap input:focus { border-color: #c4920a; }
 
     .filtros { display: flex; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
     .filtro {
@@ -89,9 +103,9 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .2s;
     }
-    .card:hover { border-color: #c4920a; box-shadow: 0 2px 8px rgba(196,146,10,.1); }
+    .card:hover { border-color: #c4920a; }
     .card.pendiente { border-left: 3px solid #d97706; border-radius: 0 10px 10px 0; }
     .card.en-camino { border-left: 3px solid #2563eb; border-radius: 0 10px 10px 0; }
     .card.listo     { border-left: 3px solid #2d7a3a; border-radius: 0 10px 10px 0; }
@@ -112,7 +126,6 @@
     .badge.estado-camino    { background: #dbeafe; color: #1e40af; border: 0.5px solid #93c5fd; }
     .badge.estado-otro      { background: #f5f0e0; color: #8a7a50; border: 0.5px solid #e6c96a; }
 
-    .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .info-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .info-label { font-size: 9px; color: #8a7a50; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
     .info-valor { font-size: 11px; color: #3d2e00; font-weight: 600; word-break: break-all; }
@@ -121,8 +134,7 @@
     .etapas { display: flex; gap: 4px; flex-wrap: wrap; }
     .etapa {
       font-size: 9px; padding: 2px 6px;
-      border-radius: 3px; border: 0.5px solid #e6c96a; color: #8a7a50;
-      background: #fff8e1;
+      border-radius: 3px; border: 0.5px solid #e6c96a; color: #8a7a50; background: #fff8e1;
     }
     .etapa.ok  { background: #dcfce7; border-color: #86efac; color: #166534; }
     .etapa.act { background: #dbeafe; border-color: #93c5fd; color: #1e40af; }
@@ -147,15 +159,10 @@
       color: #92400e; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
     }
     .vacio { color: #8a7a50; font-size: 13px; padding: 16px 0; }
-
-    .logo-ml {
-      display: flex; align-items: center; gap: 6px;
-    }
     .ml-badge {
       background: #f0c020; color: #3d2e00;
       font-size: 10px; font-weight: 700;
       padding: 2px 8px; border-radius: 4px;
-      letter-spacing: .3px;
     }
   </style>
 </head>
@@ -164,7 +171,7 @@
 <header>
   <h1>
     <span class="dot-live"></span>
-    PANEL INGRESOS COURIER — 5LD
+    Panel Ingresos Courier — 5LD
     <span class="ml-badge">DHL</span>
   </h1>
   <div>
@@ -175,6 +182,15 @@
 
 <div id="error"></div>
 <div class="resumen" id="resumen"></div>
+
+<div class="buscador-wrap">
+  <input
+    type="text"
+    id="buscador"
+    placeholder="Buscar pedido... (ej: EP0044, GLEP42)"
+    oninput="buscar(this.value)"
+  >
+</div>
 
 <div class="filtros">
   <button class="filtro activo" onclick="setFiltro('todos',this)">Todos</button>
@@ -188,7 +204,7 @@
 <div id="contenido"></div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwf0MXUFyr12UPm8TZ2ARqAb3AIhd2TQGU1lp1gQRAg2E23tFrji_yOMBz3njRf4U/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyT2k-LtPA5Vz5eJqN35UXLJdnFVSCYItyjojTo4SHnRrPI9U0FP_jvckRT4r7YH0E/exec";
   const REFRESH_SECONDS = 30;
   let countdown = REFRESH_SECONDS;
   let todosLosDatos = [];
@@ -215,6 +231,7 @@
     filtroActual = f;
     document.querySelectorAll(".filtro").forEach(b => b.classList.remove("activo"));
     btn.classList.add("activo");
+    document.getElementById("buscador").value = "";
     renderContenido(todosLosDatos);
   }
 
@@ -226,18 +243,34 @@
     return data;
   }
 
-  function renderResumen(data) {
-    const total     = data.length;
-    const ep        = data.filter(d => d.tipo === "EP").length;
-    const glep      = data.filter(d => d.tipo === "GLEP").length;
-    const pendiente = data.filter(d => !etapaOk(d.ingreso)).length;
-    const listos    = data.filter(d => etapaOk(d.ingreso)).length;
+  function buscar(texto) {
+    const t = texto.toLowerCase().trim();
+    if (!t) {
+      renderContenido(todosLosDatos);
+      return;
+    }
+    const filtrados = todosLosDatos.filter(d =>
+      d.pedido.toLowerCase().includes(t) ||
+      d.nombre.toLowerCase().includes(t) ||
+      d.tracking.toLowerCase().includes(t)
+    );
+    const contenedor = document.getElementById("contenido");
+    if (filtrados.length === 0) {
+      contenedor.innerHTML = `<p class="vacio">No se encontró ningún pedido con ese nombre.</p>`;
+      return;
+    }
+    contenedor.innerHTML = `
+      <div class="seccion-titulo">${filtrados.length} resultado${filtrados.length > 1 ? 's' : ''} para "${texto}"</div>
+      <div class="grid">${filtrados.map(cardHTML).join("")}</div>
+    `;
+  }
 
+  function renderResumen(data) {
     document.getElementById("resumen").innerHTML = `
-      <div class="stat"><div class="stat-label">Total pedidos</div><div class="stat-valor oscuro">${total}</div></div>
-      <div class="stat"><div class="stat-label">EP</div><div class="stat-valor dorado">${ep}</div></div>
-      <div class="stat"><div class="stat-label">GLEP</div><div class="stat-valor naranja">${glep}</div></div>
-      <div class="stat"><div class="stat-label">Ingreso pendiente</div><div class="stat-valor naranja">${pendiente}</div></div>
+      <div class="stat"><div class="stat-label">Total pedidos</div><div class="stat-valor oscuro">${data.length}</div></div>
+      <div class="stat"><div class="stat-label">EP</div><div class="stat-valor dorado">${data.filter(d=>d.tipo==="EP").length}</div></div>
+      <div class="stat"><div class="stat-label">GLEP</div><div class="stat-valor naranja">${data.filter(d=>d.tipo==="GLEP").length}</div></div>
+      <div class="stat"><div class="stat-label">Ingreso pendiente</div><div class="stat-valor naranja">${data.filter(d=>!etapaOk(d.ingreso)).length}</div></div>
     `;
   }
 
@@ -260,7 +293,6 @@
             <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso === "Pendiente" ? "Pendiente" : d.ingreso}</span>
           </div>
         </div>
-
         <div class="info-row-3">
           <div>
             <div class="info-label">Inicio</div>
@@ -275,7 +307,6 @@
             <div class="info-valor">${d.tracking}</div>
           </div>
         </div>
-
         <div class="etapas">
           <span class="etapa ${etapaOk(d.simulacion)?'ok':etapaActiva(d.simulacion)?'act':''}">Simulación</span>
           <span class="etapa ${etapaOk(d.cotizar)?'ok':etapaActiva(d.cotizar)?'act':''}">Cotizar</span>
@@ -284,7 +315,6 @@
           <span class="etapa ${etapaOk(d.comInv)?'ok':etapaActiva(d.comInv)?'act':''}">Com/Inv</span>
           <span class="etapa ${ingresoOk?'ok':''}">Ingreso</span>
         </div>
-
         ${d.linkDHL
           ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
           : `<div class="btn-dhl-disabled">Sin tracking cargado</div>`
@@ -305,17 +335,14 @@
     const eps   = filtrados.filter(d => d.tipo === "EP").sort((a,b) => numPedido(a.pedido) - numPedido(b.pedido));
 
     let html = "";
-
     if (gleps.length > 0) {
       html += `<div class="seccion-titulo">GLEP — ${gleps.length} pedidos</div>`;
       html += `<div class="grid">${gleps.map(cardHTML).join("")}</div>`;
     }
-
     if (eps.length > 0) {
       html += `<div class="seccion-titulo">EP — ${eps.length} pedidos</div>`;
       html += `<div class="grid">${eps.map(cardHTML).join("")}</div>`;
     }
-
     contenedor.innerHTML = html;
   }
 
