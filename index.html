@@ -3,268 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Simuladores — 5LD</title>
+  <title>Panel Simuladores — 5LD</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0f1117;
       color: #e2e8f0;
       min-height: 100vh;
-      padding: 24px;
+      padding: 20px 24px;
     }
-
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
-
-    header h1 {
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-    }
-
-    #estado-refresh {
-      font-size: 12px;
-      color: #64748b;
-    }
-
-    #contador {
-      font-size: 12px;
-      color: #22c55e;
-      margin-left: 8px;
-    }
+    header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px; }
+    .dot-live { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    #estado-refresh { font-size: 11px; color: #475569; }
+    #contador { font-size: 11px; color: #22c55e; margin-left: 6px; }
 
     .resumen {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-bottom: 28px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
     }
-
     .stat {
-      background: #1e2330;
-      border: 1px solid #2d3348;
-      border-radius: 10px;
-      padding: 14px 16px;
+      background: #161b27;
+      border: 0.5px solid #1e2a3f;
+      border-radius: 8px;
+      padding: 12px 14px;
     }
-
-    .stat-label {
-      font-size: 11px;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .stat-valor {
-      font-size: 26px;
-      font-weight: 600;
-    }
-
-    .stat-valor.verde    { color: #22c55e; }
+    .stat-label { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .stat-valor { font-size: 24px; font-weight: 600; }
+    .stat-valor.azul { color: #60a5fa; }
+    .stat-valor.lila { color: #a78bfa; }
     .stat-valor.amarillo { color: #f59e0b; }
-    .stat-valor.azul     { color: #60a5fa; }
-    .stat-valor.lila     { color: #a78bfa; }
 
-    .filtros {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
+    .filtros { display: flex; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
     .filtro {
-      font-size: 11px;
-      padding: 5px 14px;
-      border-radius: 20px;
-      border: 0.5px solid #2d3348;
-      color: #64748b;
-      background: transparent;
-      cursor: pointer;
-      transition: all .15s;
+      font-size: 11px; padding: 4px 12px;
+      border-radius: 20px; border: 0.5px solid #2d3348;
+      color: #64748b; background: transparent; cursor: pointer; transition: all .15s;
     }
+    .filtro.activo { background: #1e3a5f; border-color: #185fa5; color: #93c5fd; }
 
-    .filtro.activo {
-      background: #1e3a5f;
-      border-color: #185fa5;
-      color: #93c5fd;
+    .seccion-titulo {
+      font-size: 11px;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 10px;
+      margin-top: 18px;
+      padding-bottom: 6px;
+      border-bottom: 0.5px solid #1e2a3f;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
     }
 
     .card {
-      background: #1e2330;
-      border: 0.5px solid #2d3348;
-      border-radius: 12px;
-      padding: 16px 18px;
-      transition: border-color 0.2s;
-    }
-
-    .card:hover { border-color: #475569; }
-
-    .card.pendiente { border-left: 3px solid #f59e0b; border-radius: 0 12px 12px 0; }
-    .card.en-camino { border-left: 3px solid #60a5fa; border-radius: 0 12px 12px 0; }
-    .card.listo     { border-left: 3px solid #22c55e; border-radius: 0 12px 12px 0; }
-
-    .card-header {
+      background: #161b27;
+      border: 0.5px solid #1e2a3f;
+      border-radius: 10px;
+      padding: 14px 16px;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .card-nombre {
-      font-size: 13px;
-      font-weight: 600;
-      color: #f1f5f9;
-      line-height: 1.3;
-      max-width: 180px;
-    }
-
-    .card-pedido {
-      font-size: 11px;
-      color: #475569;
-      margin-bottom: 12px;
-      margin-top: 2px;
-    }
-
-    .badges {
-      display: flex;
-      gap: 5px;
       flex-direction: column;
-      align-items: flex-end;
-      flex-shrink: 0;
+      gap: 10px;
+      transition: border-color .2s;
     }
+    .card:hover { border-color: #334155; }
+    .card.pendiente { border-left: 2px solid #f59e0b; border-radius: 0 10px 10px 0; }
+    .card.en-camino { border-left: 2px solid #60a5fa; border-radius: 0 10px 10px 0; }
+    .card.listo     { border-left: 2px solid #22c55e; border-radius: 0 10px 10px 0; }
 
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-titulo { font-size: 13px; font-weight: 600; color: #f1f5f9; line-height: 1.3; }
+    .card-subtitulo { font-size: 10px; color: #334155; margin-top: 2px; }
+
+    .badges { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; margin-left: 8px; }
     .badge {
-      font-size: 9px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      white-space: nowrap;
+      font-size: 9px; font-weight: 600; padding: 2px 7px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
     }
+    .badge.ep   { background: #0c447c22; color: #60a5fa; border: 0.5px solid #185fa5; }
+    .badge.glep { background: #3c348922; color: #a78bfa; border: 0.5px solid #534ab7; }
+    .badge.estado-listo     { background: #14532d22; color: #4ade80; border: 0.5px solid #166534; }
+    .badge.estado-pendiente { background: #78160c22; color: #fb923c; border: 0.5px solid #9a3412; }
+    .badge.estado-camino    { background: #1e3a5f22; color: #60a5fa; border: 0.5px solid #185fa5; }
+    .badge.estado-otro      { background: #1e293b22; color: #64748b; border: 0.5px solid #334155; }
 
-    .badge.ep   { background: #1e3a5f; color: #60a5fa; border: 0.5px solid #185fa5; }
-    .badge.glep { background: #3b1f5e; color: #a78bfa; border: 0.5px solid #534ab7; }
+    .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .info-label { font-size: 9px; color: #334155; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
+    .info-valor { font-size: 11px; color: #94a3b8; font-weight: 500; word-break: break-all; }
 
-    .badge.estado-listo     { background: #14532d; color: #4ade80; border: 0.5px solid #166534; }
-    .badge.estado-pendiente { background: #451a03; color: #fb923c; border: 0.5px solid #9a3412; }
-    .badge.estado-camino    { background: #1e3a5f; color: #60a5fa; border: 0.5px solid #185fa5; }
-    .badge.estado-otro      { background: #1e293b; color: #94a3b8; border: 0.5px solid #334155; }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .info-label {
-      font-size: 9px;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 2px;
-    }
-
-    .info-valor {
-      font-size: 12px;
-      color: #cbd5e1;
-      font-weight: 500;
-    }
-
-    .estados {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
+    .etapas { display: flex; gap: 4px; flex-wrap: wrap; }
     .etapa {
-      font-size: 9px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      border: 0.5px solid #2d3348;
-      color: #475569;
+      font-size: 9px; padding: 2px 6px;
+      border-radius: 3px; border: 0.5px solid #1e2a3f; color: #334155;
     }
-
-    .etapa.ok {
-      background: #14532d22;
-      border-color: #166534;
-      color: #4ade80;
-    }
-
-    .etapa.act {
-      background: #1e3a5f22;
-      border-color: #185fa5;
-      color: #60a5fa;
-    }
+    .etapa.ok  { background: #14532d18; border-color: #166534; color: #4ade80; }
+    .etapa.act { background: #1e3a5f18; border-color: #185fa5; color: #60a5fa; }
 
     .btn-dhl {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 8px;
-      background: #0c447c22;
-      color: #60a5fa;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 500;
-      border: 0.5px solid #185fa5;
-      transition: background 0.15s;
+      display: block; width: 100%; text-align: center;
+      padding: 7px; background: #0c447c22; color: #60a5fa;
+      border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: 500;
+      border: 0.5px solid #185fa5; transition: background .15s; margin-top: auto;
     }
-
-    .btn-dhl:hover { background: #0c447c44; }
-
+    .btn-dhl:hover { background: #0c447c55; }
     .btn-dhl-disabled {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 8px;
-      background: #161b27;
-      color: #334155;
-      border-radius: 8px;
-      font-size: 12px;
-      border: 0.5px solid #1e2a3f;
+      display: block; width: 100%; text-align: center;
+      padding: 7px; background: transparent; color: #1e2a3f;
+      border-radius: 6px; font-size: 11px;
+      border: 0.5px solid #1e2a3f; margin-top: auto;
     }
 
-    #loading {
-      text-align: center;
-      padding: 60px;
-      color: #475569;
-      font-size: 14px;
-    }
-
+    #loading { text-align: center; padding: 60px; color: #475569; font-size: 14px; }
     #error {
-      display: none;
-      background: #450a0a;
-      border: 1px solid #7f1d1d;
-      color: #fca5a5;
-      padding: 14px 18px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 13px;
+      display: none; background: #450a0a; border: 0.5px solid #7f1d1d;
+      color: #fca5a5; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
     }
+    .vacio { color: #334155; font-size: 13px; padding: 16px 0; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>📦 Panel Simuladores — 5LD</h1>
+  <h1><span class="dot-live"></span> Panel Simuladores — 5LD</h1>
   <div>
-    <span id="estado-refresh">Actualizando...</span>
+    <span id="estado-refresh">Cargando...</span>
     <span id="contador"></span>
   </div>
 </header>
@@ -273,53 +147,48 @@
 <div class="resumen" id="resumen"></div>
 
 <div class="filtros">
-  <button class="filtro activo" onclick="setFiltro('todos', this)">Todos</button>
-  <button class="filtro" onclick="setFiltro('EP', this)">EP</button>
-  <button class="filtro" onclick="setFiltro('GLEP', this)">GLEP</button>
-  <button class="filtro" onclick="setFiltro('pendiente', this)">Ingreso pendiente</button>
-  <button class="filtro" onclick="setFiltro('listo', this)">Ingresados</button>
+  <button class="filtro activo" onclick="setFiltro('todos',this)">Todos</button>
+  <button class="filtro" onclick="setFiltro('EP',this)">EP</button>
+  <button class="filtro" onclick="setFiltro('GLEP',this)">GLEP</button>
+  <button class="filtro" onclick="setFiltro('pendiente',this)">Ingreso pendiente</button>
+  <button class="filtro" onclick="setFiltro('listo',this)">Ingresados</button>
 </div>
 
 <div id="loading">Cargando simuladores...</div>
-<div class="grid" id="grid"></div>
+<div id="contenido"></div>
 
 <script>
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyFFeylmfhd_T6eIEKcvtYMhfawC3bqTzbr-Wch_3C99Pe3OvjoPgZoXWRzVzU-RA/exec";
-  const REFRESH_SECONDS = 60;
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmPkv-kHQf5W5JNendpeBqYgmGwewyzgIahZgYsm_w4XNgZp6KJCWkilGWTh8_sQ/exec";
+  const REFRESH_SECONDS = 30;
   let countdown = REFRESH_SECONDS;
   let todosLosDatos = [];
   let filtroActual = "todos";
 
+  function etapaOk(v)     { if (!v) return false; const s = v.toLowerCase(); return s.includes("listo") || s.includes("ok") || s.includes("done"); }
+  function etapaActiva(v) { if (!v) return false; const s = v.toLowerCase(); return s.includes("proceso") || s.includes("camino") || s.includes("en curso"); }
+
   function estadoBadgeClass(estado) {
     if (!estado || estado === "-") return "estado-otro";
     const e = estado.toLowerCase();
-    if (e.includes("listo") || e.includes("ok") || e.includes("done")) return "estado-listo";
+    if (e.includes("listo") || e.includes("ok")) return "estado-listo";
     if (e.includes("proceso") || e.includes("camino")) return "estado-camino";
     if (e.includes("pendiente")) return "estado-pendiente";
     return "estado-otro";
   }
 
-  function etapaOk(val) {
-    if (!val) return false;
-    const v = val.toLowerCase();
-    return v.includes("listo") || v.includes("ok") || v.includes("done");
+  function numPedido(nombre) {
+    const m = nombre.match(/\d+/);
+    return m ? parseInt(m[0]) : 0;
   }
 
-  function etapaActiva(val) {
-    if (!val) return false;
-    const v = val.toLowerCase();
-    return v.includes("proceso") || v.includes("camino");
-  }
-
-  function setFiltro(filtro, btn) {
-    filtroActual = filtro;
+  function setFiltro(f, btn) {
+    filtroActual = f;
     document.querySelectorAll(".filtro").forEach(b => b.classList.remove("activo"));
     btn.classList.add("activo");
-    renderCards(todosLosDatos);
+    renderContenido(todosLosDatos);
   }
 
-  function filtrarDatos(data) {
-    if (filtroActual === "todos") return data;
+  function filtrar(data) {
     if (filtroActual === "EP") return data.filter(d => d.tipo === "EP");
     if (filtroActual === "GLEP") return data.filter(d => d.tipo === "GLEP");
     if (filtroActual === "pendiente") return data.filter(d => !etapaOk(d.ingreso));
@@ -328,85 +197,83 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyFFeylmfhd_T6
   }
 
   function renderResumen(data) {
-    const total     = data.length;
-    const ep        = data.filter(d => d.tipo === "EP").length;
-    const glep      = data.filter(d => d.tipo === "GLEP").length;
-    const pendiente = data.filter(d => !etapaOk(d.ingreso)).length;
-
     document.getElementById("resumen").innerHTML = `
-      <div class="stat">
-        <div class="stat-label">Total pedidos</div>
-        <div class="stat-valor azul">${total}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">EP</div>
-        <div class="stat-valor azul">${ep}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">GLEP</div>
-        <div class="stat-valor lila">${glep}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Ingreso pendiente</div>
-        <div class="stat-valor amarillo">${pendiente}</div>
-      </div>
+      <div class="stat"><div class="stat-label">Total pedidos</div><div class="stat-valor azul">${data.length}</div></div>
+      <div class="stat"><div class="stat-label">EP</div><div class="stat-valor azul">${data.filter(d=>d.tipo==="EP").length}</div></div>
+      <div class="stat"><div class="stat-label">GLEP</div><div class="stat-valor lila">${data.filter(d=>d.tipo==="GLEP").length}</div></div>
+      <div class="stat"><div class="stat-label">Ingreso pendiente</div><div class="stat-valor amarillo">${data.filter(d=>!etapaOk(d.ingreso)).length}</div></div>
     `;
   }
 
-  function renderCards(data) {
-    const filtrados = filtrarDatos(data);
+  function cardHTML(d) {
+    const ingresoOk = etapaOk(d.ingreso);
+    const enCamino  = !ingresoOk && (etapaActiva(d.shipping) || etapaActiva(d.comInv));
+    const cardClass = ingresoOk ? "listo" : enCamino ? "en-camino" : "pendiente";
+    const tipoClass = d.tipo === "GLEP" ? "glep" : "ep";
+
+    return `
+      <div class="card ${cardClass}">
+        <div class="card-top">
+          <div>
+            <div class="card-titulo">${d.pedido}</div>
+            <div class="card-subtitulo">${d.nombre}</div>
+          </div>
+          <div class="badges">
+            <span class="badge ${tipoClass}">${d.tipo}</span>
+            <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso === "Pendiente" ? "Pendiente" : d.ingreso}</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <div>
+            <div class="info-label">Fecha inicio</div>
+            <div class="info-valor">${d.fechaInicio}</div>
+          </div>
+          <div>
+            <div class="info-label">Tracking</div>
+            <div class="info-valor">${d.tracking}</div>
+          </div>
+        </div>
+        <div class="etapas">
+          <span class="etapa ${etapaOk(d.simulacion)?'ok':etapaActiva(d.simulacion)?'act':''}">Simulación</span>
+          <span class="etapa ${etapaOk(d.cotizar)?'ok':etapaActiva(d.cotizar)?'act':''}">Cotizar</span>
+          <span class="etapa ${etapaOk(d.consolidar)?'ok':etapaActiva(d.consolidar)?'act':''}">Consolidar</span>
+          <span class="etapa ${etapaOk(d.shipping)?'ok':etapaActiva(d.shipping)?'act':''}">Shipping</span>
+          <span class="etapa ${etapaOk(d.comInv)?'ok':etapaActiva(d.comInv)?'act':''}">Com/Inv</span>
+          <span class="etapa ${ingresoOk?'ok':''}">Ingreso</span>
+        </div>
+        ${d.linkDHL
+          ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
+          : `<div class="btn-dhl-disabled">Sin tracking cargado</div>`
+        }
+      </div>`;
+  }
+
+  function renderContenido(data) {
+    const filtrados = filtrar(data);
+    const contenedor = document.getElementById("contenido");
 
     if (filtrados.length === 0) {
-      document.getElementById("grid").innerHTML =
-        `<p style="color:#475569;font-size:14px;padding:20px 0">No hay pedidos para mostrar.</p>`;
+      contenedor.innerHTML = `<p class="vacio">No hay pedidos para mostrar.</p>`;
       return;
     }
 
-    document.getElementById("grid").innerHTML = filtrados.map(d => {
-      const ingresoOk = etapaOk(d.ingreso);
-      const enCamino  = etapaActiva(d.shipping) || etapaActiva(d.comInv);
-      const cardClass = ingresoOk ? "listo" : enCamino ? "en-camino" : "pendiente";
-      const tipoClass = d.tipo === "GLEP" ? "glep" : "ep";
+    // Separar y ordenar por número de pedido
+    const gleps = filtrados.filter(d => d.tipo === "GLEP").sort((a,b) => numPedido(a.pedido) - numPedido(b.pedido));
+    const eps   = filtrados.filter(d => d.tipo === "EP").sort((a,b) => numPedido(a.pedido) - numPedido(b.pedido));
 
-      return `
-       <div class="card-header">
-  <div>
-    <div class="card-nombre">${d.pedido}</div>
-    <div class="card-pedido">${d.nombre}</div>
-  </div>
-  <div class="badges">
-    <span class="badge ${tipoClass}">${d.tipo}</span>
-    <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso || "Pendiente"}</span>
-  </div>
-</div>
+    let html = "";
 
-          <div class="info-grid">
-            <div>
-              <div class="info-label">Fecha inicio</div>
-              <div class="info-valor">${d.fechaInicio}</div>
-            </div>
-            <div>
-              <div class="info-label">Tracking</div>
-              <div class="info-valor" style="font-size:11px;word-break:break-all">${d.tracking}</div>
-            </div>
-          </div>
+    if (gleps.length > 0 && (filtroActual === "todos" || filtroActual === "GLEP" || filtroActual === "pendiente" || filtroActual === "listo")) {
+      html += `<div class="seccion-titulo">GLEP — ${gleps.length} pedidos</div>`;
+      html += `<div class="grid">${gleps.map(cardHTML).join("")}</div>`;
+    }
 
-          <div class="estados">
-            <span class="etapa ${etapaOk(d.simulacion) ? 'ok' : etapaActiva(d.simulacion) ? 'act' : ''}">Simulación</span>
-            <span class="etapa ${etapaOk(d.cotizar)    ? 'ok' : etapaActiva(d.cotizar)    ? 'act' : ''}">Cotizar</span>
-            <span class="etapa ${etapaOk(d.consolidar) ? 'ok' : etapaActiva(d.consolidar) ? 'act' : ''}">Consolidar</span>
-            <span class="etapa ${etapaOk(d.shipping)   ? 'ok' : etapaActiva(d.shipping)   ? 'act' : ''}">Shipping</span>
-            <span class="etapa ${etapaOk(d.comInv)     ? 'ok' : etapaActiva(d.comInv)     ? 'act' : ''}">Com/Inv</span>
-            <span class="etapa ${ingresoOk              ? 'ok' : ''}">Ingreso</span>
-          </div>
+    if (eps.length > 0 && (filtroActual === "todos" || filtroActual === "EP" || filtroActual === "pendiente" || filtroActual === "listo")) {
+      html += `<div class="seccion-titulo">EP — ${eps.length} pedidos</div>`;
+      html += `<div class="grid">${eps.map(cardHTML).join("")}</div>`;
+    }
 
-          ${d.linkDHL
-            ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
-            : `<div class="btn-dhl-disabled">Sin tracking cargado aún</div>`
-          }
-        </div>
-      `;
-    }).join("");
+    contenedor.innerHTML = html;
   }
 
   async function cargarDatos() {
@@ -414,17 +281,13 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyFFeylmfhd_T6
       document.getElementById("error").style.display = "none";
       const res = await fetch(APPS_SCRIPT_URL);
       todosLosDatos = await res.json();
-
       document.getElementById("loading").style.display = "none";
       renderResumen(todosLosDatos);
-      renderCards(todosLosDatos);
-
-      const ahora = new Date().toLocaleTimeString("es-AR");
-      document.getElementById("estado-refresh").textContent = `Actualizado ${ahora}`;
+      renderContenido(todosLosDatos);
+      document.getElementById("estado-refresh").textContent = `Actualizado ${new Date().toLocaleTimeString("es-AR")}`;
     } catch (err) {
       document.getElementById("error").style.display = "block";
-      document.getElementById("error").textContent =
-        "Error al conectar con el servidor. Reintentando en " + REFRESH_SECONDS + "s...";
+      document.getElementById("error").textContent = "Error al conectar. Reintentando en " + countdown + "s...";
       document.getElementById("loading").style.display = "none";
     }
   }
@@ -432,10 +295,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyFFeylmfhd_T6
   function tick() {
     countdown--;
     document.getElementById("contador").textContent = `· ${countdown}s`;
-    if (countdown <= 0) {
-      countdown = REFRESH_SECONDS;
-      cargarDatos();
-    }
+    if (countdown <= 0) { countdown = REFRESH_SECONDS; cargarDatos(); }
   }
 
   cargarDatos();
