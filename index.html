@@ -66,10 +66,34 @@
       font-weight: 600;
     }
 
-    .stat-valor.verde  { color: #22c55e; }
+    .stat-valor.verde    { color: #22c55e; }
     .stat-valor.amarillo { color: #f59e0b; }
-    .stat-valor.azul   { color: #60a5fa; }
-    .stat-valor.lila   { color: #a78bfa; }
+    .stat-valor.azul     { color: #60a5fa; }
+    .stat-valor.lila     { color: #a78bfa; }
+
+    .filtros {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filtro {
+      font-size: 11px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 0.5px solid #2d3348;
+      color: #64748b;
+      background: transparent;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .filtro.activo {
+      background: #1e3a5f;
+      border-color: #185fa5;
+      color: #93c5fd;
+    }
 
     .grid {
       display: grid;
@@ -79,65 +103,75 @@
 
     .card {
       background: #1e2330;
-      border: 1px solid #2d3348;
+      border: 0.5px solid #2d3348;
       border-radius: 12px;
-      padding: 18px 20px;
+      padding: 16px 18px;
       transition: border-color 0.2s;
     }
 
     .card:hover { border-color: #475569; }
 
-    .card.pendiente { border-left: 3px solid #f59e0b; }
-    .card.listo     { border-left: 3px solid #22c55e; }
+    .card.pendiente { border-left: 3px solid #f59e0b; border-radius: 0 12px 12px 0; }
+    .card.en-camino { border-left: 3px solid #60a5fa; border-radius: 0 12px 12px 0; }
+    .card.listo     { border-left: 3px solid #22c55e; border-radius: 0 12px 12px 0; }
 
     .card-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 4px;
     }
 
     .card-nombre {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: #f1f5f9;
       line-height: 1.3;
-      max-width: 200px;
+      max-width: 180px;
+    }
+
+    .card-pedido {
+      font-size: 11px;
+      color: #475569;
+      margin-bottom: 12px;
+      margin-top: 2px;
     }
 
     .badges {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      flex-direction: column;
+      align-items: flex-end;
       flex-shrink: 0;
     }
 
     .badge {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
-      padding: 3px 8px;
+      padding: 2px 8px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
+      white-space: nowrap;
     }
 
-    .badge.ep   { background: #1e3a5f; color: #60a5fa; }
-    .badge.glep { background: #3b1f5e; color: #a78bfa; }
+    .badge.ep   { background: #1e3a5f; color: #60a5fa; border: 0.5px solid #185fa5; }
+    .badge.glep { background: #3b1f5e; color: #a78bfa; border: 0.5px solid #534ab7; }
 
-    .badge.estado-listo    { background: #14532d; color: #4ade80; }
-    .badge.estado-pendiente { background: #451a03; color: #fb923c; }
-    .badge.estado-otro     { background: #1e293b; color: #94a3b8; }
+    .badge.estado-listo     { background: #14532d; color: #4ade80; border: 0.5px solid #166534; }
+    .badge.estado-pendiente { background: #451a03; color: #fb923c; border: 0.5px solid #9a3412; }
+    .badge.estado-camino    { background: #1e3a5f; color: #60a5fa; border: 0.5px solid #185fa5; }
+    .badge.estado-otro      { background: #1e293b; color: #94a3b8; border: 0.5px solid #334155; }
 
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .info-item { }
-
     .info-label {
-      font-size: 10px;
+      font-size: 9px;
       color: #475569;
       text-transform: uppercase;
       letter-spacing: 0.4px;
@@ -145,24 +179,24 @@
     }
 
     .info-valor {
-      font-size: 13px;
+      font-size: 12px;
       color: #cbd5e1;
       font-weight: 500;
     }
 
     .estados {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .etapa {
-      font-size: 10px;
-      padding: 3px 8px;
+      font-size: 9px;
+      padding: 2px 7px;
       border-radius: 4px;
-      border: 1px solid #2d3348;
-      color: #64748b;
+      border: 0.5px solid #2d3348;
+      color: #475569;
     }
 
     .etapa.ok {
@@ -171,19 +205,40 @@
       color: #4ade80;
     }
 
-    .btn-dhl-disabled {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 9px;
-  background: #161b27;
-  color: #334155;
-  border-radius: 8px;
-  font-size: 13px;
-  border: 0.5px solid #1e2a3f;
-}
+    .etapa.act {
+      background: #1e3a5f22;
+      border-color: #185fa5;
+      color: #60a5fa;
+    }
 
-    .btn-dhl:hover { background: #1e4a7a; }
+    .btn-dhl {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 8px;
+      background: #0c447c22;
+      color: #60a5fa;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      border: 0.5px solid #185fa5;
+      transition: background 0.15s;
+    }
+
+    .btn-dhl:hover { background: #0c447c44; }
+
+    .btn-dhl-disabled {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 8px;
+      background: #161b27;
+      color: #334155;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 0.5px solid #1e2a3f;
+    }
 
     #loading {
       text-align: center;
@@ -215,23 +270,33 @@
 </header>
 
 <div id="error"></div>
-
 <div class="resumen" id="resumen"></div>
+
+<div class="filtros">
+  <button class="filtro activo" onclick="setFiltro('todos', this)">Todos</button>
+  <button class="filtro" onclick="setFiltro('EP', this)">EP</button>
+  <button class="filtro" onclick="setFiltro('GLEP', this)">GLEP</button>
+  <button class="filtro" onclick="setFiltro('pendiente', this)">Ingreso pendiente</button>
+  <button class="filtro" onclick="setFiltro('listo', this)">Ingresados</button>
+</div>
 
 <div id="loading">Cargando simuladores...</div>
 <div class="grid" id="grid"></div>
 
 <script>
-  // ⚠️ REEMPLAZÁ CON TU URL DE APPS SCRIPT
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7KGau3-crdgySxN1ygtQvo3MFlUTMGJOgo8JBNdgNsfflgHOd2v8/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7KGau3-crdgySxN1ygtQvo3MFlUTMGJOgo8JBNdgNsfflgHOd2v8/exec";
+
   const REFRESH_SECONDS = 30;
   let countdown = REFRESH_SECONDS;
+  let todosLosDatos = [];
+  let filtroActual = "todos";
 
   function estadoBadgeClass(estado) {
     if (!estado || estado === "-") return "estado-otro";
     const e = estado.toLowerCase();
     if (e.includes("listo") || e.includes("ok") || e.includes("done")) return "estado-listo";
-    if (e.includes("pendiente") || e === "") return "estado-pendiente";
+    if (e.includes("proceso") || e.includes("camino")) return "estado-camino";
+    if (e.includes("pendiente")) return "estado-pendiente";
     return "estado-otro";
   }
 
@@ -241,15 +306,37 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7
     return v.includes("listo") || v.includes("ok") || v.includes("done");
   }
 
+  function etapaActiva(val) {
+    if (!val) return false;
+    const v = val.toLowerCase();
+    return v.includes("proceso") || v.includes("camino");
+  }
+
+  function setFiltro(filtro, btn) {
+    filtroActual = filtro;
+    document.querySelectorAll(".filtro").forEach(b => b.classList.remove("activo"));
+    btn.classList.add("activo");
+    renderCards(todosLosDatos);
+  }
+
+  function filtrarDatos(data) {
+    if (filtroActual === "todos") return data;
+    if (filtroActual === "EP") return data.filter(d => d.tipo === "EP");
+    if (filtroActual === "GLEP") return data.filter(d => d.tipo === "GLEP");
+    if (filtroActual === "pendiente") return data.filter(d => !etapaOk(d.ingreso));
+    if (filtroActual === "listo") return data.filter(d => etapaOk(d.ingreso));
+    return data;
+  }
+
   function renderResumen(data) {
-    const total    = data.length;
-    const ep       = data.filter(d => d.tipo === "EP").length;
-    const glep     = data.filter(d => d.tipo === "GLEP").length;
+    const total     = data.length;
+    const ep        = data.filter(d => d.tipo === "EP").length;
+    const glep      = data.filter(d => d.tipo === "GLEP").length;
     const pendiente = data.filter(d => !etapaOk(d.ingreso)).length;
 
     document.getElementById("resumen").innerHTML = `
       <div class="stat">
-        <div class="stat-label">Total activos</div>
+        <div class="stat-label">Total pedidos</div>
         <div class="stat-valor azul">${total}</div>
       </div>
       <div class="stat">
@@ -268,48 +355,58 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7
   }
 
   function renderCards(data) {
-    if (data.length === 0) {
+    const filtrados = filtrarDatos(data);
+
+    if (filtrados.length === 0) {
       document.getElementById("grid").innerHTML =
-        `<p style="color:#475569;font-size:14px">No hay simuladores con seguimiento DHL activo.</p>`;
+        `<p style="color:#475569;font-size:14px;padding:20px 0">No hay pedidos para mostrar.</p>`;
       return;
     }
 
-    document.getElementById("grid").innerHTML = data.map(d => {
+    document.getElementById("grid").innerHTML = filtrados.map(d => {
       const ingresoOk = etapaOk(d.ingreso);
-      const cardClass = ingresoOk ? "listo" : "pendiente";
+      const enCamino  = etapaActiva(d.shipping) || etapaActiva(d.comInv);
+      const cardClass = ingresoOk ? "listo" : enCamino ? "en-camino" : "pendiente";
       const tipoClass = d.tipo === "GLEP" ? "glep" : "ep";
 
       return `
         <div class="card ${cardClass}">
           <div class="card-header">
-            <div class="card-nombre">${d.nombre}</div>
+            <div>
+              <div class="card-nombre">${d.nombre}</div>
+            </div>
             <div class="badges">
               <span class="badge ${tipoClass}">${d.tipo}</span>
               <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso || "Pendiente"}</span>
             </div>
           </div>
 
+          <div class="card-pedido">📋 ${d.pedido}</div>
+
           <div class="info-grid">
-            <div class="info-item">
+            <div>
               <div class="info-label">Fecha inicio</div>
               <div class="info-valor">${d.fechaInicio}</div>
             </div>
-            <div class="info-item">
+            <div>
               <div class="info-label">Tracking</div>
               <div class="info-valor" style="font-size:11px;word-break:break-all">${d.tracking}</div>
             </div>
           </div>
 
           <div class="estados">
-            <span class="etapa ${etapaOk(d.shipping) ? "ok" : ""}">Shipping</span>
-            <span class="etapa ${etapaOk(d.comInv) ? "ok" : ""}">Com/Inv</span>
-            <span class="etapa ${ingresoOk ? "ok" : ""}">Ingreso</span>
+            <span class="etapa ${etapaOk(d.simulacion) ? 'ok' : etapaActiva(d.simulacion) ? 'act' : ''}">Simulación</span>
+            <span class="etapa ${etapaOk(d.cotizar)    ? 'ok' : etapaActiva(d.cotizar)    ? 'act' : ''}">Cotizar</span>
+            <span class="etapa ${etapaOk(d.consolidar) ? 'ok' : etapaActiva(d.consolidar) ? 'act' : ''}">Consolidar</span>
+            <span class="etapa ${etapaOk(d.shipping)   ? 'ok' : etapaActiva(d.shipping)   ? 'act' : ''}">Shipping</span>
+            <span class="etapa ${etapaOk(d.comInv)     ? 'ok' : etapaActiva(d.comInv)     ? 'act' : ''}">Com/Inv</span>
+            <span class="etapa ${ingresoOk              ? 'ok' : ''}">Ingreso</span>
           </div>
 
-          ${d.linkDHL 
-  ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
-  : `<div class="btn-dhl-disabled">Sin tracking cargado aún</div>`
-}
+          ${d.linkDHL
+            ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
+            : `<div class="btn-dhl-disabled">Sin tracking cargado aún</div>`
+          }
         </div>
       `;
     }).join("");
@@ -319,11 +416,11 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7
     try {
       document.getElementById("error").style.display = "none";
       const res = await fetch(APPS_SCRIPT_URL);
-      const data = await res.json();
+      todosLosDatos = await res.json();
 
       document.getElementById("loading").style.display = "none";
-      renderResumen(data);
-      renderCards(data);
+      renderResumen(todosLosDatos);
+      renderCards(todosLosDatos);
 
       const ahora = new Date().toLocaleTimeString("es-AR");
       document.getElementById("estado-refresh").textContent = `Actualizado ${ahora}`;
@@ -335,7 +432,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynURrXS3-vc8t7
     }
   }
 
-  // Auto-refresh con countdown
   function tick() {
     countdown--;
     document.getElementById("contador").textContent = `· ${countdown}s`;
