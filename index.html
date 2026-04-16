@@ -285,7 +285,7 @@
 
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmPkv-kHQf5W5JNendpeBqYgmGwewyzgIahZgYsm_w4XNgZp6KJCWkilGWTh8_sQ/exec";
-  const REFRESH_SECONDS = 30;
+  const REFRESH_SECONDS = 60;
   let countdown = REFRESH_SECONDS;
   let todosLosDatos = [];
   let filtroActual = "todos";
@@ -369,18 +369,16 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmPkv-kHQf5W5J
       const tipoClass = d.tipo === "GLEP" ? "glep" : "ep";
 
       return `
-        <div class="card ${cardClass}">
-          <div class="card-header">
-            <div>
-              <div class="card-nombre">${d.nombre}</div>
-            </div>
-            <div class="badges">
-              <span class="badge ${tipoClass}">${d.tipo}</span>
-              <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso || "Pendiente"}</span>
-            </div>
-          </div>
-
-          <div class="card-pedido">📋 ${d.pedido}</div>
+       <div class="card-header">
+  <div>
+    <div class="card-nombre">${d.pedido}</div>
+    <div class="card-pedido">${d.nombre}</div>
+  </div>
+  <div class="badges">
+    <span class="badge ${tipoClass}">${d.tipo}</span>
+    <span class="badge ${estadoBadgeClass(d.ingreso)}">${d.ingreso || "Pendiente"}</span>
+  </div>
+</div>
 
           <div class="info-grid">
             <div>
