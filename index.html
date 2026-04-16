@@ -171,19 +171,17 @@
       color: #4ade80;
     }
 
-    .btn-dhl {
-      display: block;
-      width: 100%;
-      text-align: center;
-      padding: 9px;
-      background: #1e3a5f;
-      color: #60a5fa;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
+    .btn-dhl-disabled {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 9px;
+  background: #161b27;
+  color: #334155;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 0.5px solid #1e2a3f;
+}
 
     .btn-dhl:hover { background: #1e4a7a; }
 
@@ -309,9 +307,10 @@
             <span class="etapa ${ingresoOk ? "ok" : ""}">Ingreso</span>
           </div>
 
-          <a class="btn-dhl" href="${d.linkDHL}" target="_blank">
-            Ver seguimiento DHL →
-          </a>
+          ${d.linkDHL 
+  ? `<a class="btn-dhl" href="${d.linkDHL}" target="_blank">Ver seguimiento DHL →</a>`
+  : `<div class="btn-dhl-disabled">Sin tracking cargado aún</div>`
+}
         </div>
       `;
     }).join("");
